@@ -19,6 +19,16 @@ namespace Incapsulation.RationalNumbers
 
             if (this.Denominator != 0) IsNan= true;
             else IsNan = false;
+
+            int a_sokr = this.Reduce().Numerator;
+            int b_sokr = this.Reduce().Denominator;
+
+            if(a<0) this.Numerator = - a_sokr;
+            else this.Numerator = a_sokr;
+
+            if(b<0) this.Denominator = - b_sokr;
+            else this.Denominator = b_sokr;
+            //comment
         }
 
         public Rational(int a)
@@ -28,6 +38,8 @@ namespace Incapsulation.RationalNumbers
 
             if (this.Denominator != 0) IsNan = true;
             else IsNan = false;
+
+            this.Reduce();
         }
 
         
@@ -86,11 +98,49 @@ namespace Incapsulation.RationalNumbers
             return (int)a.Numerator / a.Denominator;
         }
 
-        public static explicit operator double(Rational a)
+        public static implicit operator double(Rational a)
         {
             return (double)a.Numerator / a.Denominator;
         }
 
-        
+        // Возвращает наибольший общий делитель (Алгоритм Евклида)
+        private static int getGreatestCommonDivisor(int c, int d)
+        {
+            int a = Math.Abs(c);
+            int b = Math.Abs(d);
+
+            while (b != 0)
+            {
+                int temp = b;
+                b = a % b;
+                a = temp;
+            }
+            return a;
+        }
+
+        // Возвращает наименьшее общее кратное
+        private static int getLeastCommonMultiple(int c, int d)
+        {
+            int a = Math.Abs(c);
+            int b = Math.Abs(d);
+            // В формуле опушен модуль, так как в классе
+            // числитель всегда неотрицательный, а знаменатель -- положительный
+            // ...
+            // Деление здесь -- челочисленное, что не искажает результат, так как
+            // числитель и знаменатель делятся на свои делители,
+            // т.е. при делении не будет остатка
+
+            return a * b / getGreatestCommonDivisor(a, b);
+        }
+
+        //возвращает сокращённую дробь
+        public Rational Reduce()
+        {
+            Rational result = this;
+            int greatestCommonDivisor = getGreatestCommonDivisor(this.Numerator, this.Denominator);
+            result.Numerator /= greatestCommonDivisor;
+            result.Denominator /= greatestCommonDivisor;
+            return result;
+        }
     }
 }
