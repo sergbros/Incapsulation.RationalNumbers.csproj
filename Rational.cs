@@ -77,6 +77,15 @@ namespace Incapsulation.RationalNumbers
             result.Numerator = a.Numerator * b.Denominator;
             result.Denominator = a.Denominator * b.Numerator;
 
+            int a_sokr = result.Reduce().Numerator;
+            int b_sokr = result.Reduce().Denominator;
+
+            if (a < 0) result.Numerator = -a_sokr;
+            else result.Numerator = a_sokr;
+
+            if (b < 0) result.Denominator = -b_sokr;
+            else result.Denominator = b_sokr;
+
             return result;
         }
 
@@ -95,7 +104,8 @@ namespace Incapsulation.RationalNumbers
 
         public static implicit operator int(Rational a)
         {
-            return (int)a.Numerator / a.Denominator;
+            if (a.Denominator == 0) return 0;
+            else return (int)a.Numerator / a.Denominator;
         }
 
         public static implicit operator double(Rational a)
